@@ -1,37 +1,30 @@
-<header
-  class="d-flex flex-wrap d-flex justify-content-between py-3 mb-4 border-bottom"
->
-  <div>
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li>
-        <a
-          [routerLink]="'/person-manager'"
-          class="nav-link px-2 link-dark"
-          routerLinkActive="active"
-        >Person Manager</a
-        >
-      </li>
+<header class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light py-4">
+    <div class="container-fluid">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="/assets/logo.svg" alt="UK Parliament logo" class="me-3" height="50">
+      </a>
 
+      <!-- Mobile Toggle Button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <li>
-          <a
-            [routerLink]="'/implementation'"
-            routerLinkActive="active"
-            class="nav-link px-2 link-dark"
-          >Implementation</a
-          >
-        </li>
-
-
-      <li>
-        <a
-          [routerLink]="'about'"
-          class="nav-link px-2 link-dark"
-          routerLinkActive="active"
-        >About</a
-        >
-      </li>
-    </ul>
-  </div>
-
+      <!-- Navbar Links -->
+      <div class="collapse navbar-collapse justify-content-lg-end text-center text-lg-start" id="navbarNav">
+        <ul class="navbar-nav gap-4 fs-6">
+          <li class="nav-item">
+            <a [routerLink]="'/person-manager'" class="nav-link link-dark" routerLinkActive="active" aria-label="Go to Person Manager page">Person Manager</a>
+          </li>
+          <li class="nav-item">
+            <a [routerLink]="'/implementation'" class="nav-link link-dark" routerLinkActive="active" aria-label="Go to Implementation page">Implementation</a>
+          </li>
+          <li class="nav-item">
+            <a [routerLink]="'/requirements'" class="nav-link link-dark" routerLinkActive="active" aria-label="Go to Requirements page">Requirements</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </header>

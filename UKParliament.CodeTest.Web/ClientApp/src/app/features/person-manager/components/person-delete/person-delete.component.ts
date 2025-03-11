@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { PersonStore } from '../../services/person.store';
 
@@ -19,7 +19,7 @@ export class PersonDeleteComponent {
     this.router.navigate(['/person-manager']);
   }
 
-  onPersonDlete(personId: number): void {
+  onDelete(personId: number | undefined): void {
     if(personId) {
       this.personStore.deletePerson(personId);
     }

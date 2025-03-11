@@ -25,6 +25,10 @@ export const APP_ROUTES: Routes = [
         loadComponent: () =>
           import('./features/implementation-details/components/implementation-details-container/implementation-details-container.component').then((m) => m.ImplementationDetailsContainerComponent),
       },
+      {
+        path: 'requirements',
+        component: HomeComponent
+      },
 
     ],
   },

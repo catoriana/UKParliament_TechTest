@@ -6,54 +6,67 @@
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 id="people-list-heading">List of People</h4>
         <button
-        type="button"
-        class="btn btn-sm btn-outline-primary"
-        (click)="AddPerson()"
-        [attr.aria-label]="'Add Person'"
-      >
-        Add Person
-      </button>
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="AddPerson()"
+          [attr.aria-label]="'Add Person'"
+        >
+          Add Person
+        </button>
       </div>
 
-      <app-pds-table-grid
-        title=""
-        [items]="people"
-        [columns]="tableColumns"
-        [itemsPerPage]="6"
-        [selectedItemId]="selectedPerson?.id"
-        [emptyMessage]="'No people available. Please add some people to the list.'"
-        role="grid"
-        aria-labelledby="people-list-heading"
-        (itemSelected)="selectPerson($event)"
-        (itemAction)="handlePersonAction($event)"
-      >
-        <!-- Custom action buttons template -->
-        <ng-template #actionButtons let-person>
-          <div class="d-flex gap-1">
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-primary"
-              (click)="handlePersonAction({item: person, action: 'edit'}); $event.stopPropagation()"
-              [attr.aria-label]="'Edit ' + person.firstName + ' ' + person.lastName"
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-danger"
-              (click)="handlePersonAction({item: person, action: 'delete'}); $event.stopPropagation()"
-              [attr.aria-label]="'Delete ' + person.firstName + ' ' + person.lastName"
-            >
-              Delete
-            </button>
-          </div>
-        </ng-template>
-      </app-pds-table-grid>
+      <div class="container mt-4">
+        <div class="table-responsive">
+          <table class="table table-hover" aria-labelledby="people-list-heading">
+            <thead class="table-primary">
+              <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Date of Birth</th>
+                <th scope="col">Department</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (person of (people | paginate: { itemsPerPage: 6, currentPage: currentPage }); track person.id) {
+              <tr>
+                <td>{{ person.firstName }}</td>
+                <td>{{ person.lastName }}</td>
+                <td>{{ person.dateOfBirth | date: 'dd-MMM-yyyy' }}</td>
+                <td>{{ person.department?.name || 'N/A' }}</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="selectPerson(person)"
+                    [attr.aria-label]="'Select ' + person.firstName + ' ' + person.lastName"
+                  >
+                    Select
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger m-2"
+                    (click)="deletePerson(person.id)"
+                    [attr.aria-label]="'Delete ' + person.firstName + ' ' + person.lastName"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        
+          <pagination-controls
+            (pageChange)="currentPage = $event"
+            [maxSize]="5"
+            [directionLinks]="true"
+            class="d-flex justify-content-center mt-3"
+            aria-label="Pagination controls"
+          ></pagination-controls>
+        </div>
+      </div>
     </div>
   </div>
-} 
-
-@else {
+} @else {
   <!-- Message for when no people are available -->
   <p class="alert alert-warning text-center" role="alert" aria-live="polite">
     No people available. Please add some people to the list.

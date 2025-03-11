@@ -13,7 +13,7 @@ import { PersonListComponent } from '../person-list/person-list.component';
 import { DepartmentService } from '../../services/department.service';
 import { DepartmentViewModel } from '../../models/department-view-model';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PdsPersonEditorComponent } from 'src/app/shared/ui/components/pds-person-editor/pds-person-editor.component';
 import { DepartmentStore } from '../../services/department.store';
 
@@ -33,11 +33,13 @@ import { DepartmentStore } from '../../services/department.store';
 export class PersonManagerContainerComponent implements OnInit {
   private personStore = inject(PersonStore);
   private departmentStore = inject(DepartmentStore);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   isLoading = this.personStore.isLoading;
   people = this.personStore.people;
   selectedPerson = this.personStore.selectedPerson;
-  departments = signal<DepartmentViewModel[]>([]);
+  departments = this.departmentStore.departments;
 
   ngOnInit(): void {
     this.personStore.loadPeople();
@@ -61,7 +63,12 @@ export class PersonManagerContainerComponent implements OnInit {
   }
 
   onPersonDeleted(personId: number): void {
-    this.personStore.deletePerson(personId);
+    //this.personStore.deletePerson(personId);
+    if(personId) {
+      this.personStore.selectPerson(personId);
+      this.router.navigate(['delete', personId],  { relativeTo: this.route });
+    }
+
   }
 
   onCancel(): void {

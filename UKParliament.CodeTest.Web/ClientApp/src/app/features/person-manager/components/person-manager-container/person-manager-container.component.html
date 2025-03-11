@@ -1,10 +1,12 @@
-<div class="container-fluid">
+<router-outlet></router-outlet>
+<div class="container-fluid p-4">
   @if(isLoading()) {
-    <p>Is Loading..... </p>
+    <p>Is Loading.....</p>
   }
-    <div class="row">
-      <!-- Person List Section -->
-      <div class="col-12 col-md-8 mb-4">
+  <div class="row g-4">
+    <!-- Person List Section -->
+    <div class="col-12 col-md-8 d-flex">
+      <div class="w-100 bg-white p-3 shadow rounded h-100">
         <app-person-list
           [people]="people()"
           [selectedPerson]="selectedPerson()"
@@ -13,29 +15,30 @@
           (addEvent)="onAdd()"
         ></app-person-list>
       </div>
-  
-      <!-- Person Editor Section -->
-      <div class="col-12 col-md-4  mb-4">
-        @if(selectedPerson()!== null) {
+    </div>
+
+    <!-- Person Editor Section -->
+    <div class="col-12 col-md-4 d-flex">
+      <div class="w-100 bg-white p-3 shadow rounded h-100">
+        @if(selectedPerson() !== null) {
           <app-pds-person-editor
-          componentTitle="Edit Person"
-          buttonReset="Cancel"
-          [person]="selectedPerson()"
-          [departments]="departments()"
-          (submitEvent)="onPersonUpdated($event)"
-          (cancelEvent)="onCancel()"
+            componentTitle="Edit Person"
+            buttonReset="Cancel"
+            [person]="selectedPerson()"
+            [departments]="departments()"
+            (submitEvent)="onPersonUpdated($event)"
+            (cancelEvent)="onCancel()"
           ></app-pds-person-editor>
-  
         } @else {
           <app-pds-person-editor
-          componentTitle="Add Person"
-          buttonReset="Clear"
-          [departments]="departments()"
-          (submitEvent)="onPersonAdded($event)"
-          (cancelEvent)="onCancel()"
+            componentTitle="Add Person"
+            buttonReset="Clear"
+            [departments]="departments()"
+            (submitEvent)="onPersonAdded($event)"
+            (cancelEvent)="onCancel()"
           ></app-pds-person-editor>
         }
       </div>
     </div>
- 
+  </div>
 </div>

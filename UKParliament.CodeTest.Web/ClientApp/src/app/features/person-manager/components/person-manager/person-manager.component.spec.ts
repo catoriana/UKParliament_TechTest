@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PdsTableGridComponent } from './pds-table-grid.component';
+import { PersonManagerComponent } from './person-manager.component';
 
-describe('PdsTableGridComponent', () => {
-  let component: PdsTableGridComponent;
-  let fixture: ComponentFixture<PdsTableGridComponent>;
+describe('PersonManagerComponent', () => {
+  let component: PersonManagerComponent;
+  let fixture: ComponentFixture<PersonManagerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PdsTableGridComponent]
+      imports: [PersonManagerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PdsTableGridComponent);
+    fixture = TestBed.createComponent(PersonManagerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

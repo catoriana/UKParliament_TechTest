@@ -3,6 +3,7 @@ import { PersonViewModel } from '../models/person-view-model';
 import { PersonService } from './person.service';
 import { DepartmentViewModel } from '../models/department-view-model';
 import { Subject, takeUntil } from 'rxjs';
+import { DepartmentStore } from './department.store';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,7 @@ export class PersonStore {
   private _errorMessage = signal<string | null>(null); // For error handling
 
   private personService = inject(PersonService);
+  private departmentStore = inject(DepartmentStore);
 
   private destroy$ = new Subject<void>();
   // Computed properties for reactive data management
@@ -88,6 +90,7 @@ export class PersonStore {
       .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe when destroyed
       .subscribe({
         next: () => {
+          person.department = this.departmentStore.getDepartment(person.departmentId);
           this.updatePersonInStore(person);
           this._selectedPersonId.set(null);
           this._isLoading.set(false); // Set loading to false after data is loaded

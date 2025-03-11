@@ -16,6 +16,8 @@ export class DepartmentStore {
   private destroy$ = new Subject<void>();
   departments = computed(() => this._departments());
 
+
+
   loadDepartments(): void {
 
     this._isLoading.set(true); // Set loading to true while fetching data
@@ -36,6 +38,10 @@ export class DepartmentStore {
           console.error(error); // Log error
         },
       });
+  }
+
+  getDepartment(deparmentId: number): DepartmentViewModel | undefined {
+    return this._departments().find(i => i.id == deparmentId);
   }
 
   // Unsubscribe when the store is no longer needed

@@ -74,7 +74,7 @@ public class PersonManagerContext : DbContext
             new Person { Id = 1, FirstName = "Laura", LastName = "Wilson", DateOfBirth = new DateOnly(1977,02,02), DepartmentId = 1 },
             new Person { Id = 2, FirstName = "Sandra", LastName = "Smith", DateOfBirth = new DateOnly(1987, 03, 08), DepartmentId = 2 },
             new Person { Id = 3, FirstName = "Frank", LastName = "Jones", DateOfBirth = new DateOnly(1997, 04, 15), DepartmentId = 3 },
-            new Person { Id = 4, FirstName = "Bob", LastName = "Fleece", DateOfBirth = new DateOnly(200, 05, 22), DepartmentId = 4 },
+            new Person { Id = 4, FirstName = "Bob", LastName = "Fleece", DateOfBirth = new DateOnly(2003, 05, 22), DepartmentId = 4 },
             new Person { Id = 5, FirstName = "Vince", LastName = "Wilson", DateOfBirth = new DateOnly(2002, 02, 02), DepartmentId = 5 },
             new Person { Id = 6, FirstName = "Nick", LastName = "Smith", DateOfBirth = new DateOnly(2001, 03, 08), DepartmentId = 2 },
             new Person { Id = 7, FirstName = "Mary", LastName = "Jones", DateOfBirth = new DateOnly(1988, 05, 15), DepartmentId = 3 },
