@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Person List Section -->
+    <div class="col-12 col-md-8 mb-4">
+      <app-person-list
+        [people]="people()"
+        [selectedPerson]="selectedPerson()"
+        (personSelected)="onPersonSelected($event)"
+        (personDeleted)="onPersonDeleted($event)"
+        (addEvent)="onAdd()"
+      ></app-person-list>
+      <!-- Link to Add Component -->
+    </div>
+
+    <!-- Person Editor Section -->
+    <div class="col-12 col-md-4  mb-4">
+      @if(selectedPerson()!== null) {
+        <app-pds-person-editor
+        componentTitle="Edit Person"
+        buttonReset="Cancel"
+        [person]="selectedPerson()"
+        [departments]="departments()"
+        (submitEvent)="onPersonUpdated($event)"
+        (cancelEvent)="onCancel()"
+        ></app-pds-person-editor>
+
+      } @else {
+        <app-pds-person-editor
+        componentTitle="Add Person"
+        buttonReset="Clear"
+        [departments]="departments()"
+        (submitEvent)="onPersonAdded($event)"
+        (cancelEvent)="onCancel()"
+        ></app-pds-person-editor>
+      }
+    </div>
+  </div>
+</div>

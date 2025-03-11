@@ -1,0 +1,137 @@
+<div class="card">
+  <div class="card-body">
+    <h4>{{ componentTitle() }}</h4>
+    <!-- Form for editing person details -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name:</label>
+        <input
+          id="firstName"
+          type="text"
+          class="form-control"
+          formControlName="firstName"
+          [ngClass]="{
+            'is-invalid':
+              form.get('firstName')?.invalid && form.get('firstName')?.touched,
+            'is-valid': form.get('firstName')?.valid
+          }"
+          [attr.aria-invalid]="form.get('firstName')?.invalid"
+          [attr.aria-describedby]="'firstNameError'"
+          [attr.aria-required]="true"
+        />
+        <div
+          *ngIf="
+            form.get('firstName')?.invalid && form.get('firstName')?.touched
+          "
+          class="invalid-feedback"
+          id="firstNameError"
+        >
+          {{ getErrorMessage("firstName", "First name") }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name:</label>
+        <input
+          id="lastName"
+          type="text"
+          class="form-control"
+          formControlName="lastName"
+          [ngClass]="{
+            'is-invalid':
+              form.get('lastName')?.invalid && form.get('lastName')?.touched,
+            'is-valid': form.get('lastName')?.valid
+          }"
+          [attr.aria-invalid]="form.get('lastName')?.invalid"
+          [attr.aria-describedby]="'lastNameError'"
+          [attr.aria-required]="true"
+        />
+        <div
+          *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched"
+          class="invalid-feedback"
+          id="lastNameError"
+        >
+          {{ getErrorMessage("lastName", "Last name") }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="dateOfBirth" class="form-label">Date of Birth:</label>
+        <input
+          id="dateOfBirth"
+          type="date"
+          class="form-control"
+          formControlName="dateOfBirth"
+          [ngClass]="{
+            'is-invalid':
+              form.get('dateOfBirth')?.invalid &&
+              form.get('dateOfBirth')?.touched,
+            'is-valid': form.get('dateOfBirth')?.valid
+          }"
+          [attr.aria-invalid]="form.get('dateOfBirth')?.invalid"
+          [attr.aria-describedby]="'dateOfBirthError'"
+          [attr.aria-required]="true"
+        />
+        <div
+          *ngIf="form.get('dateOfBirth')?.invalid"
+          class="invalid-feedback"
+          id="dateOfBirthError"
+        >
+          {{ getErrorMessage("dateOfBirth", "Date of birth") }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="departmentId" class="form-label">Department:</label>
+        <select
+          id="departmentId"
+          class="form-select"
+          formControlName="departmentId"
+          [ngClass]="{
+            'is-invalid':
+              form.get('departmentId')?.invalid &&
+              form.get('departmentId')?.touched
+          }"
+          [attr.aria-invalid]="form.get('departmentId')?.invalid"
+          [attr.aria-required]="true"
+          required
+        >
+          <option value="" disabled selected>Select a department</option>
+          @for(department of departments; track department.id) {
+          <option [ngValue]="department.id">
+            {{ department.name }}
+          </option>
+          }
+        </select>
+        <div
+          *ngIf="
+            form.get('departmentId')?.invalid &&
+            form.get('departmentId')?.touched
+          "
+          class="invalid-feedback"
+        >
+          {{ getErrorMessage("Department", "Department") }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary ms-2"
+          type="button"
+          (click)="onCancel()"
+        >
+          {{ buttonReset() }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

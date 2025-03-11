@@ -1,0 +1,61 @@
+<!-- Grid Container -->
+@if (people.length > 0) {
+  <div class="card">
+    <div class="card-body">
+      
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 id="people-list-heading">List of People</h4>
+        <button
+        type="button"
+        class="btn btn-sm btn-outline-primary"
+        (click)="AddPerson()"
+        [attr.aria-label]="'Add Person'"
+      >
+        Add Person
+      </button>
+      </div>
+
+      <app-pds-table-grid
+        title=""
+        [items]="people"
+        [columns]="tableColumns"
+        [itemsPerPage]="6"
+        [selectedItemId]="selectedPerson?.id"
+        [emptyMessage]="'No people available. Please add some people to the list.'"
+        role="grid"
+        aria-labelledby="people-list-heading"
+        (itemSelected)="selectPerson($event)"
+        (itemAction)="handlePersonAction($event)"
+      >
+        <!-- Custom action buttons template -->
+        <ng-template #actionButtons let-person>
+          <div class="d-flex gap-1">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary"
+              (click)="handlePersonAction({item: person, action: 'edit'}); $event.stopPropagation()"
+              [attr.aria-label]="'Edit ' + person.firstName + ' ' + person.lastName"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger"
+              (click)="handlePersonAction({item: person, action: 'delete'}); $event.stopPropagation()"
+              [attr.aria-label]="'Delete ' + person.firstName + ' ' + person.lastName"
+            >
+              Delete
+            </button>
+          </div>
+        </ng-template>
+      </app-pds-table-grid>
+    </div>
+  </div>
+} 
+
+@else {
+  <!-- Message for when no people are available -->
+  <p class="alert alert-warning text-center" role="alert" aria-live="polite">
+    No people available. Please add some people to the list.
+  </p>
+}

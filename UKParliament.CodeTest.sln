@@ -1,0 +1,80 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKParliament.CodeTest.Services", "UKParliament.CodeTest.Services\UKParliament.CodeTest.Services.csproj", "{3E5D1C30-EC3D-4CF6-87FA-995800ABBB12}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKParliament.CodeTest.Web", "UKParliament.CodeTest.Web\UKParliament.CodeTest.Web.csproj", "{75165423-4212-4E84-B26F-DB3CAE8E105D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UKParliament.CodeTest.Data", "UKParliament.CodeTest.Data\UKParliament.CodeTest.Data.csproj", "{20AF84AD-3FE8-454C-9338-FEA520E9FF2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{807D226D-A5E0-4F74-A21A-9FC3B8E1B36D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKParliament.CodeTest.Services.Tests", "UKParliament.CodeTest.Services.Tests\UKParliament.CodeTest.Services.Tests.csproj", "{1EB2B591-22F8-4B06-B35D-7E4B599A7ADC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{A86DFC16-FC3A-4915-89A3-8678C134FA64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKParliament.CodeTest.Data.Tests", "UKParliament.CodeTest.Data.Tests\UKParliament.CodeTest.Data.Tests.csproj", "{00B9E158-3BE8-4F89-B6B9-6D4888C26C5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKParliament.CodeTest.ViewModels", "UKParliament.CodeTest.ViewModels\UKParliament.CodeTest.ViewModels.csproj", "{500A7982-3122-4D43-8D8A-24713F94CDC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKParliament.CodeTest.Web.Tests", "UKParliament.CodeTest.Web.Tests\UKParliament.CodeTest.Web.Tests.csproj", "{F8E4B1A2-5D0C-499E-B6AF-8FC125644C0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKParliament.CodeTest.ViewModels.Tests", "UKParliament.CodeTest.ViewModels.Tests\UKParliament.CodeTest.ViewModels.Tests.csproj", "{B0290039-2570-4772-953C-5ADF4830B9AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E5D1C30-EC3D-4CF6-87FA-995800ABBB12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E5D1C30-EC3D-4CF6-87FA-995800ABBB12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E5D1C30-EC3D-4CF6-87FA-995800ABBB12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E5D1C30-EC3D-4CF6-87FA-995800ABBB12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75165423-4212-4E84-B26F-DB3CAE8E105D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75165423-4212-4E84-B26F-DB3CAE8E105D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75165423-4212-4E84-B26F-DB3CAE8E105D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75165423-4212-4E84-B26F-DB3CAE8E105D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20AF84AD-3FE8-454C-9338-FEA520E9FF2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AF84AD-3FE8-454C-9338-FEA520E9FF2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20AF84AD-3FE8-454C-9338-FEA520E9FF2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20AF84AD-3FE8-454C-9338-FEA520E9FF2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EB2B591-22F8-4B06-B35D-7E4B599A7ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EB2B591-22F8-4B06-B35D-7E4B599A7ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EB2B591-22F8-4B06-B35D-7E4B599A7ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EB2B591-22F8-4B06-B35D-7E4B599A7ADC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00B9E158-3BE8-4F89-B6B9-6D4888C26C5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00B9E158-3BE8-4F89-B6B9-6D4888C26C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00B9E158-3BE8-4F89-B6B9-6D4888C26C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00B9E158-3BE8-4F89-B6B9-6D4888C26C5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{500A7982-3122-4D43-8D8A-24713F94CDC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{500A7982-3122-4D43-8D8A-24713F94CDC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{500A7982-3122-4D43-8D8A-24713F94CDC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{500A7982-3122-4D43-8D8A-24713F94CDC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8E4B1A2-5D0C-499E-B6AF-8FC125644C0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8E4B1A2-5D0C-499E-B6AF-8FC125644C0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8E4B1A2-5D0C-499E-B6AF-8FC125644C0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8E4B1A2-5D0C-499E-B6AF-8FC125644C0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0290039-2570-4772-953C-5ADF4830B9AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0290039-2570-4772-953C-5ADF4830B9AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0290039-2570-4772-953C-5ADF4830B9AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0290039-2570-4772-953C-5ADF4830B9AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1EB2B591-22F8-4B06-B35D-7E4B599A7ADC} = {A86DFC16-FC3A-4915-89A3-8678C134FA64}
+		{00B9E158-3BE8-4F89-B6B9-6D4888C26C5C} = {A86DFC16-FC3A-4915-89A3-8678C134FA64}
+		{F8E4B1A2-5D0C-499E-B6AF-8FC125644C0B} = {A86DFC16-FC3A-4915-89A3-8678C134FA64}
+		{B0290039-2570-4772-953C-5ADF4830B9AF} = {A86DFC16-FC3A-4915-89A3-8678C134FA64}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3BA769F-8BCD-4B34-B4BC-ECCCD848D3A1}
+	EndGlobalSection
+EndGlobal

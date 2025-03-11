@@ -1,0 +1,87 @@
+<!-- table-grid.component.html -->
+<div class="table-grid-container">
+  @if (title) {
+    <h2 id="table-title">{{ title }}</h2>
+  }
+
+  <!-- Grid Container -->
+  @if (items.length > 0) {
+    <div class="table-responsive">
+      <table [class]="tableClasses" aria-labelledby="table-title">
+        <thead [class]="theadClass">
+          <tr>
+            @for (column of columns; track column.header) {
+              <th 
+                scope="col" 
+                [class.d-none]="column.hideOnMobile" 
+                [class.d-md-table-cell]="column.hideOnMobile"
+                
+              >
+                {{ column.header }}
+              </th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (item of (items | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }); track item.id) {
+            <tr 
+              (click)="selectItem(item)"
+              [class.table-active]="item.id === selectedItemId"
+              style="cursor: pointer"
+              role="row"
+              [attr.aria-selected]="item.id === selectedItemId ? 'true' : 'false'"
+            >
+              @for (column of columns; track column.header) {
+                <td 
+                  [class.d-none]="column.hideOnMobile" 
+                  [class.d-md-table-cell]="column.hideOnMobile"
+                >
+                  @if (column.isAction) {
+                    @if (actionButtonsTemplate) {
+                      <ng-container 
+                        [ngTemplateOutlet]="actionButtonsTemplate" 
+                        [ngTemplateOutletContext]="{$implicit: item}"
+                      ></ng-container>
+                    } @else {
+                      <!-- Default edit button if no custom template provided -->
+                      <button
+                        class="btn btn-sm btn-outline-primary"
+                        (click)="defaultEditAction(item, $event)"
+                        [attr.aria-label]="'Edit ' + (item.firstName || '') + ' ' + (item.lastName || '')"
+                      >
+                        Edit
+                      </button>
+                    }
+                  } @else {
+                    @if (column.format) {
+                      {{ column.format(getFieldValue(item, column.field)) }}
+                    } @else {
+                      {{ getFieldValue(item, column.field) || 'N/A' }}
+                    }
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <pagination-controls
+      (pageChange)="currentPage = $event"
+      [maxSize]="5"
+      [directionLinks]="true"
+      class="d-flex justify-content-center mt-3"
+      aria-label="Pagination controls"
+    ></pagination-controls>
+  }
+
+  @else {
+    <!-- Message for when no data is available -->
+    <p class="alert alert-warning text-center" role="alert" aria-live="assertive">
+      {{ emptyMessage }}
+    </p>
+  }
+</div>
