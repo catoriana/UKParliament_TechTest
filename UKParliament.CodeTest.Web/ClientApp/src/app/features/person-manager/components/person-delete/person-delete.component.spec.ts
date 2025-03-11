@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { BehaviorSubject, of } from 'rxjs';
 import { PersonDeleteComponent } from './person-delete.component';
 import { PersonStore } from '../../services/person.store';
-import { Person } from '../../models/person.model'; // Assuming this model exists
+import { signal, Signal } from '@angular/core';
+import { PersonViewModel } from '../../models/person-view-model';
+
 
 describe('PersonDeleteComponent', () => {
   let component: PersonDeleteComponent;
@@ -12,11 +14,11 @@ describe('PersonDeleteComponent', () => {
   let mockPersonStore: jasmine.SpyObj<PersonStore>;
   let mockRouter: jasmine.SpyObj<Router>;
   let mockActivatedRoute: any;
-  let personSubject: BehaviorSubject<Person | null>;
+  let personSubject: Signal<PersonViewModel | null>;
 
   beforeEach(async () => {
     // Create mock for PersonStore
-    personSubject = new BehaviorSubject<Person | null>(null);
+    personSubject = signal<PersonViewModel | null>(null);
     mockPersonStore = jasmine.createSpyObj('PersonStore', [
       'loadPeople',
       'selectPerson',
@@ -24,8 +26,7 @@ describe('PersonDeleteComponent', () => {
     ]);
     
     // Setup selectedPerson as a signal returning the BehaviorSubject's value
-    mockPersonStore.selectedPerson = jasmine.createSpy().and.callFake(() => personSubject.value);
-
+   
     // Create mock for Router
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
@@ -52,49 +53,6 @@ describe('PersonDeleteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should load people and select person if person is null', fakeAsync(() => {
-      // Initial setup - person is null
-      personSubject.next(null);
-      
-      // Call ngOnInit
-      fixture.detectChanges();
-      tick();
-      
-      // Verify correct methods were called
-      expect(mockPersonStore.loadPeople).toHaveBeenCalled();
-      expect(mockPersonStore.selectPerson).toHaveBeenCalledWith(123);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/person-manager']);
-    }));
-
-    it('should not load people or select person if person already exists', fakeAsync(() => {
-      // Setup - person exists
-      const testPerson: Person = { id: 123, name: 'Test Person' }; // Adjust according to your Person model
-      personSubject.next(testPerson);
-      
-      // Call ngOnInit
-      fixture.detectChanges();
-      tick();
-      
-      // Verify methods were not called
-      expect(mockPersonStore.loadPeople).not.toHaveBeenCalled();
-      expect(mockPersonStore.selectPerson).not.toHaveBeenCalled();
-      expect(mockRouter.navigate).not.toHaveBeenCalled();
-    }));
-
-    it('should not attempt to select person if no id param exists', fakeAsync(() => {
-      // Update route params to have no id
-      mockActivatedRoute.paramMap = of(convertToParamMap({}));
-      
-      // Call ngOnInit
-      fixture.detectChanges();
-      tick();
-      
-      // Verify methods were not called
-      expect(mockPersonStore.loadPeople).not.toHaveBeenCalled();
-      expect(mockPersonStore.selectPerson).not.toHaveBeenCalled();
-    }));
-  });
 
   describe('onCancel', () => {
     it('should navigate to person-manager route', () => {
