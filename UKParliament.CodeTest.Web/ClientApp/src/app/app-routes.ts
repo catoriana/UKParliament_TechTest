@@ -8,9 +8,13 @@ import { PersonManagerContainerComponent } from './features/person-manager/compo
 export const APP_ROUTES: Routes = [
   {
     path: '',
-    component: LayoutComponent, // Ensure HomeComponent has a <router-outlet>
-
+    component: LayoutComponent,
     children: [
+      {
+        path: '',
+        redirectTo: 'person-manager', // Redirect to person-manager by default
+        pathMatch: 'full',  // Use 'full' to ensure full matching
+      },
       {
         path: 'person-manager',
         loadChildren: () =>
@@ -18,11 +22,12 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: 'implementation',
-        loadChildren: () =>
-          import('./features/implementation-details/implementation-details.routes').then((m) => m.IMPLEMENTATION_DETAILS_ROUTES),
+        loadComponent: () =>
+          import('./features/implementation-details/components/implementation-details-container/implementation-details-container.component').then((m) => m.ImplementationDetailsContainerComponent),
       },
-      { path: '**', component: PersonManagerContainerComponent },
+
     ],
   },
+  { path: '**', component: Error404PageComponent },
   
 ];

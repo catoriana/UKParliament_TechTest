@@ -15,6 +15,7 @@ import { DepartmentViewModel } from '../../models/department-view-model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PdsPersonEditorComponent } from 'src/app/shared/ui/components/pds-person-editor/pds-person-editor.component';
+import { DepartmentStore } from '../../services/department.store';
 
 @Component({
   selector: 'app-person-manager-container',
@@ -30,22 +31,17 @@ import { PdsPersonEditorComponent } from 'src/app/shared/ui/components/pds-perso
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PersonManagerContainerComponent implements OnInit {
-  private personService = inject(PersonService);
   private personStore = inject(PersonStore);
-  private departmentService = inject(DepartmentService);
+  private departmentStore = inject(DepartmentStore);
 
+  isLoading = this.personStore.isLoading;
   people = this.personStore.people;
   selectedPerson = this.personStore.selectedPerson;
   departments = signal<DepartmentViewModel[]>([]);
 
   ngOnInit(): void {
     this.personStore.loadPeople();
-
-    effect(() => {
-      this.departmentService.getAll().subscribe((deps) => {
-        this.departments.set(deps);
-      });
-    });
+    this.departmentStore.loadDepartments();
   }
 
   onPersonSelected(person: PersonViewModel): void {
@@ -53,33 +49,19 @@ export class PersonManagerContainerComponent implements OnInit {
   }
 
   onPersonAdded(person: PersonViewModel): void {
-    effect(() => {
-      this.personService.addPerson(person).subscribe((newPerson) => {
-        this.personStore.addPerson(newPerson);
-      });
-    });
-    this.resetState();
+    if (person) {
+      this.personStore.addPerson(person);
+    }
   }
 
-  onPersonUpdated(updatedPerson: PersonViewModel): void {
-    if (updatedPerson) {
-      effect(() => {
-      this.personService.updatePerson(updatedPerson).subscribe(() => {
-        this.personStore.updatePerson(updatedPerson);
-      });
-        this.resetState();
-      });
+  onPersonUpdated(person: PersonViewModel): void {
+    if (person) {
+      this.personStore.updatePerson(person);
     }
-    // else {
-    //   this.resetState();
-    // }
   }
 
   onPersonDeleted(personId: number): void {
-    this.personService.deletePerson(personId).subscribe(() => {
-      this.personStore.deletePerson(personId);
-      this.resetState();
-    });
+    this.personStore.deletePerson(personId);
   }
 
   onCancel(): void {
