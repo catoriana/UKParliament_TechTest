@@ -8,16 +8,11 @@ import { DepartmentService } from './department.service';
 })
 export class DepartmentStore {
   private departmentService = inject(DepartmentService);
-
   private _departments = signal<DepartmentViewModel[]>([]);
   private _isLoading = signal<boolean>(false); // For loading state
   private _errorMessage = signal<string | null>(null); // For error handling
-
   private destroy$ = new Subject<void>();
   departments = computed(() => this._departments());
-
-
-
   loadDepartments(): void {
 
     this._isLoading.set(true); // Set loading to true while fetching data

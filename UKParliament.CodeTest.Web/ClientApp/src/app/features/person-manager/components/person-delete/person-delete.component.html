@@ -1,15 +1,15 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-6">
+<div class="container-fluid p-4">
+  <div class="row g-4">
+    <div class="col-md-8">
       <!-- 50% width on medium screens and above -->
       <div class="card">
         <div class="card-body">
-          <h4 id="delete-person-heading">Delete Person</h4> <!-- Added ID for better screen reader navigation -->
-
+          <h4  id="delete-person-heading">Delete Person</h4> <!-- Added ID for better screen reader navigation -->
+          <hr class="my-4">
           <!-- Form for displaying person details -->
           <div class="container mt-5">
             <div class="row mb-3">
-              <label for="firstName" class="col-sm-2 col-form-label">First Name</label>
+              <label for="firstName" class="col-sm-2 col-form-label fw-bold">First Name:</label>
               <div class="col-sm-10">
                 <span id="firstName" class="form-control-plaintext" aria-labelledby="firstName">
                   {{ person()?.firstName }}
@@ -17,7 +17,7 @@
               </div>
             </div>
             <div class="row mb-3">
-              <label for="lastName" class="col-sm-2 col-form-label">Last Name</label>
+              <label for="lastName" class="col-sm-2 col-form-label fw-bold">Last Name:</label>
               <div class="col-sm-10">
                 <span id="lastName" class="form-control-plaintext" aria-labelledby="lastName">
                   {{ person()?.lastName }}
@@ -25,7 +25,7 @@
               </div>
             </div>
             <div class="row mb-3">
-              <label for="dob" class="col-sm-2 col-form-label">Date of Birth</label>
+              <label for="dob" class="col-sm-2 col-form-label fw-bold">Date of Birth:</label>
               <div class="col-sm-10">
                 <span id="dob" class="form-control-plaintext" aria-labelledby="dob">
                   {{ person()?.dateOfBirth | date: "dd-MMM-yyyy" }}
@@ -33,7 +33,7 @@
               </div>
             </div>
             <div class="row mb-3">
-              <label for="department" class="col-sm-2 col-form-label">Department</label>
+              <label for="department" class="col-sm-2 col-form-label fw-bold">Department:</label>
               <div class="col-sm-10">
                 <span id="department" class="form-control-plaintext" aria-labelledby="department">
                   {{ person()?.department?.name }}

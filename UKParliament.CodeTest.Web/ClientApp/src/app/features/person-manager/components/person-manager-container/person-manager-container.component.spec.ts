@@ -1,179 +1,222 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { PersonManagerContainerComponent } from './person-manager-container.component';
-import { PersonService } from '../../services/person.service';
-import { PersonStore } from '../../services/person.store';
-import { DepartmentService } from '../../services/department.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { PersonListComponent } from '../person-list/person-list.component';
-import { PdsPersonEditorComponent } from 'src/app/shared/ui/components/pds-person-editor/pds-person-editor.component';
+import { By } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, signal } from '@angular/core';
+
+import { PersonManagerContainerComponent } from './person-manager-container.component';
+import { PersonStore } from '../../services/person.store';
+import { DepartmentStore } from '../../services/department.store';
 import { PersonViewModel } from '../../models/person-view-model';
 import { DepartmentViewModel } from '../../models/department-view-model';
-import { of } from 'rxjs';
-import { ChangeDetectionStrategy, signal } from '@angular/core';
+
+// Mock components
+@Component({
+  selector: 'app-person-list',
+  template: '<div></div>'
+})
+class MockPersonListComponent {
+  @Input() people: PersonViewModel[] | null = [];
+  @Input() selectedPerson: PersonViewModel | null = null;
+  @Output() personSelected = new EventEmitter<PersonViewModel>();
+  @Output() personDeleted = new EventEmitter<number>();
+  @Output() addPerson = new EventEmitter<void>();
+}
+
+@Component({
+  selector: 'app-pds-person-editor',
+  template: '<div></div>'
+})
+class MockPdsPersonEditorComponent {
+  @Input() componentTitle!: string;
+  @Input() buttonReset!: string;
+  @Input() departments: DepartmentViewModel[] | null = [];
+  @Input() person: PersonViewModel | null = null;
+  @Output() submitEvent = new EventEmitter<PersonViewModel>();
+  @Output() cancelEvent = new EventEmitter<void>();
+}
 
 describe('PersonManagerContainerComponent', () => {
   let component: PersonManagerContainerComponent;
   let fixture: ComponentFixture<PersonManagerContainerComponent>;
-  let personServiceSpy: jasmine.SpyObj<PersonService>;
-  let personStoreSpy: jasmine.SpyObj<PersonStore>;
-  let departmentServiceSpy: jasmine.SpyObj<DepartmentService>;
+  let mockPersonStore: jasmine.SpyObj<PersonStore>;
+  let mockDepartmentStore: jasmine.SpyObj<DepartmentStore>;
+  let mockRouter: jasmine.SpyObj<Router>;
+  let mockActivatedRoute: any;
 
-  const mockPeople: PersonViewModel[] = [
-    { id: 1, firstName: 'John', lastName: 'Doe', departmentId: 1, dateOfBirth: '1987-01-02'},
-    { id: 2, firstName: 'Jane', lastName: 'Smith', departmentId: 2, dateOfBirth: '2000-05-22'}
-  ];
+  const mockPeople = [
+    { id: 1, firstName: 'John', lastName: 'Doe', dateOfBirth: '1990-01-01', departmentId: 1 },
+    { id: 2, firstName: 'Jane', lastName: 'Smith', dateOfBirth: '1985-05-05', departmentId: 2 }
+  ] as PersonViewModel[];
 
-  const mockDepartments: DepartmentViewModel[] = [
+  const mockDepartments = [
     { id: 1, name: 'HR' },
     { id: 2, name: 'Engineering' }
-  ];
+  ] as DepartmentViewModel[];
+
+  const mockPerson = mockPeople[0];
 
   beforeEach(async () => {
-    // Create spies for the services and store
-    personServiceSpy = jasmine.createSpyObj('PersonService', ['getAll', 'addPerson', 'updatePerson', 'deletePerson']);
-    personStoreSpy = jasmine.createSpyObj('PersonStore', [
-      'setPeople', 
-      'selectPerson', 
-      'addPerson', 
-      'updatePerson', 
+    // Create spies for the stores
+    const peopleSignal = signal<PersonViewModel[]>(mockPeople);
+    const loadingSignal = signal<boolean>(false);
+    const selectedPersonSignal = signal<PersonViewModel | null>(null);
+    const departmentsSignal = signal<DepartmentViewModel[]>(mockDepartments);
+
+    mockPersonStore = jasmine.createSpyObj('PersonStore', [
+      'loadPeople',
+      'selectPerson',
+      'addPerson',
+      'updatePerson',
       'deletePerson'
     ], {
-      // Mock signal properties
-      people: signal(mockPeople),
-      selectedPerson: signal(null),
-      totalPeople: signal(mockPeople.length)
+      people: peopleSignal,
+      isLoading: loadingSignal,
+      selectedPerson: selectedPersonSignal
     });
-    
-    departmentServiceSpy = jasmine.createSpyObj('DepartmentService', ['getAll']);
 
-    // Set up default return values for service methods
-    personServiceSpy.getAll.and.returnValue(of(mockPeople));
-    personServiceSpy.addPerson.and.callFake(person => of({ ...person, id: 3 }));
-    personServiceSpy.updatePerson.and.callFake(person => of(person));
-    personServiceSpy.deletePerson.and.returnValue(of(void 0));
-    departmentServiceSpy.getAll.and.returnValue(of(mockDepartments));
+    mockDepartmentStore = jasmine.createSpyObj('DepartmentStore', [
+      'loadDepartments'
+    ], {
+      departments: departmentsSignal
+    });
+
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    mockActivatedRoute = {};
 
     await TestBed.configureTestingModule({
       imports: [
         CommonModule,
         RouterModule,
-        PersonManagerContainerComponent,
-        PersonListComponent,
-        PdsPersonEditorComponent
+        PersonManagerContainerComponent
+      ],
+      declarations: [
+        MockPersonListComponent,
+        MockPdsPersonEditorComponent
       ],
       providers: [
-        { provide: PersonService, useValue: personServiceSpy },
-        { provide: PersonStore, useValue: personStoreSpy },
-        { provide: DepartmentService, useValue: departmentServiceSpy }
+        { provide: PersonStore, useValue: mockPersonStore },
+        { provide: DepartmentStore, useValue: mockDepartmentStore },
+        { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     })
-    // Override the component's ChangeDetectionStrategy to enable testing
     .overrideComponent(PersonManagerContainerComponent, {
-      set: { changeDetection: ChangeDetectionStrategy.Default }
+      set: {
+        imports: [
+          CommonModule,
+          RouterModule,
+          MockPersonListComponent,
+          MockPdsPersonEditorComponent
+        ],
+        changeDetection: ChangeDetectionStrategy.Default
+      }
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(PersonManagerContainerComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with data from services during ngOnInit', fakeAsync(() => {
-    component.ngOnInit();
-    tick();
-
-    expect(personServiceSpy.getAll).toHaveBeenCalled();
-    expect(departmentServiceSpy.getAll).toHaveBeenCalled();
-    expect(personStoreSpy.setPeople).toHaveBeenCalledWith(mockPeople);
-    expect(component.departments()).toEqual(mockDepartments);
-  }));
-
-  it('should call selectPerson when onPersonSelected is called', () => {
-    const selectedPerson = mockPeople[0];
-    component.onPersonSelected(selectedPerson);
-    
-    expect(personStoreSpy.selectPerson).toHaveBeenCalledWith(selectedPerson.id);
+  describe('ngOnInit', () => {
+    it('should load people and departments on initialization', () => {
+      // The loadPeople and loadDepartments should have been called in beforeEach during fixture.detectChanges()
+      expect(mockPersonStore.loadPeople).toHaveBeenCalled();
+      expect(mockDepartmentStore.loadDepartments).toHaveBeenCalled();
+    });
   });
 
-  it('should add a person and reset state when onPersonAdded is called', fakeAsync(() => {
-    const newPerson: PersonViewModel = { 
-      id: 0, 
-      firstName: 'New', 
-      lastName: 'Person', 
-      departmentId: 1, 
-      dateOfBirth: '1988-01-02', 
+  describe('onPersonSelected', () => {
+    it('should call personStore.selectPerson with correct id', () => {
+      // Arrange
+      const person = { ...mockPerson };
 
-    };
-    const addedPerson = { ...newPerson, id: 3 };
-    
-    component.onPersonAdded(newPerson);
-    tick();
-    
-    expect(personServiceSpy.addPerson).toHaveBeenCalledWith(newPerson);
-    expect(personStoreSpy.addPerson).toHaveBeenCalledWith(addedPerson);
-    expect(personStoreSpy.selectPerson).toHaveBeenCalledWith(null);
-  }));
+      // Act
+      component.onPersonSelected(person);
 
-  it('should update a person and reset state when onPersonUpdated is called', fakeAsync(() => {
-    const updatedPerson = { ...mockPeople[0], firstName: 'Updated' };
-    
-    component.onPersonUpdated(updatedPerson);
-    tick();
-    
-    expect(personServiceSpy.updatePerson).toHaveBeenCalledWith(updatedPerson);
-    expect(personStoreSpy.updatePerson).toHaveBeenCalledWith(updatedPerson);
-    expect(personStoreSpy.selectPerson).toHaveBeenCalledWith(null);
-  }));
-
-  it('should delete a person and reset state when onPersonDeleted is called', fakeAsync(() => {
-    const personId = 1;
-    
-    component.onPersonDeleted(personId);
-    tick();
-    
-    expect(personServiceSpy.deletePerson).toHaveBeenCalledWith(personId);
-    expect(personStoreSpy.deletePerson).toHaveBeenCalledWith(personId);
-    expect(personStoreSpy.selectPerson).toHaveBeenCalledWith(null);
-  }));
-
-  it('should reset state when onCancel is called', () => {
-    component.onCancel();
-    
-    expect(personStoreSpy.selectPerson).toHaveBeenCalledWith(null);
+      // Assert
+      expect(mockPersonStore.selectPerson).toHaveBeenCalledWith(person.id);
+    });
   });
 
-  it('should reset state when onAdd is called', () => {
-    component.onAdd();
-    
-    expect(personStoreSpy.selectPerson).toHaveBeenCalledWith(null);
+  describe('onPersonAdded', () => {
+    it('should call personStore.addPerson with the provided person', () => {
+      // Arrange
+      const person = { ...mockPerson, id: 0 };
+
+      // Act
+      component.onPersonAdded(person);
+
+      // Assert
+      expect(mockPersonStore.addPerson).toHaveBeenCalledWith(person);
+    });
   });
 
-  // Test for error handling
-  it('should handle errors when adding a person', fakeAsync(() => {
-    const newPerson: PersonViewModel = { 
-      id: 0, 
-      firstName: 'Error', 
-      lastName: 'Person', 
-      departmentId: 1, 
-      dateOfBirth: '1988-01-02', 
-    };
-    
-    // Make the service return an error
-    const error = new Error('Server error');
-    personServiceSpy.addPerson.and.returnValue(of(error) as any);
-    
-    // We need to spy on console.error to prevent test output pollution
-    spyOn(console, 'error');
-    
-    component.onPersonAdded(newPerson);
-    tick();
-    
-    expect(personServiceSpy.addPerson).toHaveBeenCalledWith(newPerson);
-    // The store operations should not be called due to error
-    expect(personStoreSpy.addPerson).not.toHaveBeenCalled();
-  }));
+  describe('onPersonUpdated', () => {
+    it('should call personStore.updatePerson with the provided person', () => {
+      // Arrange
+      const person = { ...mockPerson };
+
+      // Act
+      component.onPersonUpdated(person);
+
+      // Assert
+      expect(mockPersonStore.updatePerson).toHaveBeenCalledWith(person);
+    });
+  });
+
+  describe('onPersonDeleted', () => {
+    it('should navigate to delete route with correct personId', () => {
+      // Arrange
+      const personId = 1;
+
+      // Act
+      component.onPersonDeleted(personId);
+
+      // Assert
+      expect(mockPersonStore.selectPerson).toHaveBeenCalledWith(personId);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['delete', personId], { relativeTo: mockActivatedRoute });
+    });
+  });
+
+  describe('onCancel', () => {
+    it('should call resetState', () => {
+      // Arrange
+      spyOn(component as any, 'resetState');
+
+      // Act
+      component.onCancel();
+
+      // Assert
+      expect((component as any).resetState).toHaveBeenCalled();
+    });
+  });
+
+  describe('onAdd', () => {
+    it('should call resetState', () => {
+      // Arrange
+      spyOn(component as any, 'resetState');
+
+      // Act
+      component.onAdd();
+
+      // Assert
+      expect((component as any).resetState).toHaveBeenCalled();
+    });
+  });
+
+  describe('resetState', () => {
+    it('should call personStore.selectPerson with null', () => {
+      // Act
+      (component as any).resetState();
+
+      // Assert
+      expect(mockPersonStore.selectPerson).toHaveBeenCalledWith(null);
+    });
+  });
 });

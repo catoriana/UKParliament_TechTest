@@ -60,30 +60,6 @@ describe('PersonStore', () => {
       expect(store).toBeTruthy();
     });
   
-    describe('setPeople', () => {
-      it('should set people array', () => {
-        const people = [testPerson1, testPerson2];
-        
-        store.setPeople(people);
-        
-        expect(store.totalPeople()).toBe(2);
-        // Verify the effect was triggered
-        expect(consoleSpy).toHaveBeenCalledWith('Total People: 2');
-      });
-  
-      it('should replace existing people array', () => {
-        // First set with two people
-        store.setPeople([testPerson1, testPerson2]);
-        
-        // Then replace with just one
-        const newPeople = [testPerson1];
-        store.setPeople(newPeople);
-        
-        expect(store.totalPeople()).toBe(1);
-        // Verify the effect was triggered for both operations
-        expect(consoleSpy).toHaveBeenCalledWith('Total People: 1');
-      });
-    });
   
     describe('selectPerson', () => {
       it('should set selectedPersonId and update selectedPerson', () => {
@@ -117,7 +93,6 @@ describe('PersonStore', () => {
       it('should add a person to empty store', () => {
         store.addPerson(testPerson1);
         
-        expect(store.totalPeople()).toBe(1);
         // Check if effect logged the correct count
         expect(consoleSpy).toHaveBeenCalledWith('Total People: 1');
       });
@@ -128,7 +103,6 @@ describe('PersonStore', () => {
         
         store.addPerson(testPerson2);
         
-        expect(store.totalPeople()).toBe(2);
         expect(consoleSpy).toHaveBeenCalledWith('Total People: 2');
       });
     });
@@ -161,7 +135,6 @@ describe('PersonStore', () => {
         store.updatePerson(updatedPerson1);
         
         // Get the updated list by checking totalPeople and manually check testPerson2 still exists
-        expect(store.totalPeople()).toBe(2);
         
         // Select and verify testPerson2 is unchanged
         store.selectPerson(2);
@@ -173,7 +146,6 @@ describe('PersonStore', () => {
         
         store.updatePerson(updatedPerson1);
         
-        expect(store.totalPeople()).toBe(2);
       });
     });
   
@@ -183,7 +155,6 @@ describe('PersonStore', () => {
         
         store.deletePerson(1);
         
-        expect(store.totalPeople()).toBe(1);
         // Verify only testPerson2 remains by selecting it
         store.selectPerson(2);
         expect(store.selectedPerson()).toEqual(testPerson2);
@@ -212,26 +183,11 @@ describe('PersonStore', () => {
         
         store.deletePerson(999);
         
-        expect(store.totalPeople()).toBe(2);
       });
     });
   
     describe('computed signals', () => {
-      it('totalPeople should reflect the correct count', () => {
-        expect(store.totalPeople()).toBe(0);
-        
-        store.addPerson(testPerson1);
-        expect(store.totalPeople()).toBe(1);
-        
-        store.addPerson(testPerson2);
-        expect(store.totalPeople()).toBe(2);
-        
-        store.deletePerson(1);
-        expect(store.totalPeople()).toBe(1);
-        
-        store.setPeople([]);
-        expect(store.totalPeople()).toBe(0);
-      });
+
   
       it('selectedPerson should update reactively based on selectPerson calls', () => {
         store.setPeople([testPerson1, testPerson2]);
