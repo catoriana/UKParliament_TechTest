@@ -1,3 +1,4 @@
+using System.Threading.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using UKParliament.CodeTest.Data;
@@ -35,6 +36,22 @@ public class Program
         //Add AutoMapper
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+        //Add Rate Limiting
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.AddPolicy("Fixed", httpContext =>
+
+                RateLimitPartition.GetFixedWindowLimiter(
+                        httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = builder.Configuration.GetValue<int>("RateLimiting:MaxRequests"),  // Allow max 5 requests
+                            Window = TimeSpan.FromMinutes(builder.Configuration.GetValue<int>("RateLimiting:RequestsPerMinute")),  // Per minute
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueLimit = builder.Configuration.GetValue<int>("RateLimiting:QueueLimit"), // Allow 2 extra requests to queue
+                        }));
+        });
+
         builder.Services.AddDbContext<PersonManagerContext>(op => op.UseInMemoryDatabase("PersonManager"));
 
         builder.Services.AddScoped<IPersonRepository, PersonRepository>();
@@ -69,29 +86,6 @@ public class Program
                 options.RoutePrefix = string.Empty; // Makes Swagger UI available at the root (http://localhost:<port>/)
             });
         }
-
-        ////// Add CSP middleware
-        ////app.Use(async (context, next) =>
-        ////{
-        ////    // Define your CSP policy
-        ////    context.Response.Headers.Append(
-        ////        "Content-Security-Policy",
-        ////        "default-src 'self'; " +
-        ////        "script-src 'self' https://trusted-scripts.com; " +
-        ////        "style-src 'self' https://trusted-styles.com; " +
-        ////        "img-src 'self' data: https://trusted-images.com; " +
-        ////        "font-src 'self' https://trusted-fonts.com; " +
-        ////        "connect-src 'self' https://api.trusted-apis.com; " +
-        ////        "frame-src 'self' https://trusted-frames.com; " +
-        ////        "object-src 'none'; " +
-        ////        "base-uri 'self'; " +
-        ////        "form-action 'self'; " +
-        ////        "frame-ancestors 'self'; " +
-        ////        "upgrade-insecure-requests;"
-        ////    );
-
-        ////    await next();
-        ////});
 
         // Add Global Exception Middleware
         app.UseMiddleware<GlobalExceptionMiddleware>();
