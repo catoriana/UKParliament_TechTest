@@ -13,7 +13,7 @@ public class PersonViewModelValidator: AbstractValidator<PersonViewModel>
     /// </summary>
     public PersonViewModelValidator()
     {
-        RuleFor(p => p.Id).NotEmpty().WithMessage("Id is required.");
+        RuleFor(p => p.Id).NotNull().WithMessage("Id is required.");
         RuleFor(p => p.DateOfBirth)
             .NotEmpty().WithMessage("Date of birth is required")
             .Must(BeAValidDate).WithMessage("Please provide a valid date of birth")

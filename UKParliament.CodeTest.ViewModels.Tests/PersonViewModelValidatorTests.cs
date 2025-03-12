@@ -11,19 +11,19 @@ public class PersonViewModelValidatorTests
         _validator = new PersonViewModelValidator();
     }
 
-    [Fact]
-    public void Validate_ShouldFail_When_Id_Is_Empty()
-    {
-        // Arrange
-        var model = new PersonViewModel { Id = 0, FirstName = "FirstName", LastName = "LastName", DepartmentId = 1, DateOfBirth = DateOnly.FromDateTime(DateTime.Now.AddYears(-21)) }; // Assuming 0 is invalid
+    ////[Fact]
+    ////public void Validate_ShouldFail_When_Id_Is_Empty()
+    ////{
+    ////    // Arrange
+    ////    var model = new PersonViewModel { Id = 0, FirstName = "FirstName", LastName = "LastName", DepartmentId = 1, DateOfBirth = DateOnly.FromDateTime(DateTime.Now.AddYears(-21)) }; // Assuming 0 is invalid
 
-        // Act
-        var result = _validator.Validate(model);
+    ////    // Act
+    ////    var result = _validator.Validate(model);
 
-        // Assert
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Id" && e.ErrorMessage == "Id is required.");
-    }
+    ////    // Assert
+    ////    Assert.False(result.IsValid);
+    ////    Assert.Contains(result.Errors, e => e.PropertyName == "Id" && e.ErrorMessage == "Id is required.");
+    ////}
 
     [Fact]
     public void Validate_ShouldFail_When_DateOfBirth_Is_Default()

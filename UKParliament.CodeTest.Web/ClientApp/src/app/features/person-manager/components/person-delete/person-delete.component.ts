@@ -1,6 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+
 import { PersonStore } from '../../services/person.store';
 
 @Component({
@@ -21,7 +22,7 @@ export class PersonDeleteComponent implements OnInit {
       const idParam = params.get('id');
       if (idParam) {
         if (this.person() == null) {
-          this.personStore.loadPeople();
+          //this.personStore.loadPeople();
           this.personStore.selectPerson(Number(idParam));
           this.onCancel();
         }

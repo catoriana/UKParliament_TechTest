@@ -6,7 +6,6 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { PersonStore } from '../../services/person.store';
 import { PersonService } from '../../services/person.service';
 import { PersonViewModel } from '../../models/person-view-model';
 import { PersonListComponent } from '../person-list/person-list.component';
@@ -16,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PdsPersonEditorComponent } from 'src/app/shared/ui/components/pds-person-editor/pds-person-editor.component';
 import { DepartmentStore } from '../../services/department.store';
+import { PersonStore } from '../../services/person.store';
 
 @Component({
   selector: 'app-person-manager-container',
@@ -36,13 +36,13 @@ export class PersonManagerContainerComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  isLoading = this.personStore.isLoading;
+  isLoading = this.personStore.loading;
   people = this.personStore.people;
   selectedPerson = this.personStore.selectedPerson;
   departments = this.departmentStore.departments;
 
   ngOnInit(): void {
-    this.personStore.loadPeople();
+    this.personStore.loadPersons();
     this.departmentStore.loadDepartments();
   }
 
@@ -52,7 +52,7 @@ export class PersonManagerContainerComponent implements OnInit {
 
   onPersonAdded(person: PersonViewModel): void {
     if (person) {
-      this.personStore.addPerson(person);
+      this.personStore.createPerson(person);
     }
   }
 

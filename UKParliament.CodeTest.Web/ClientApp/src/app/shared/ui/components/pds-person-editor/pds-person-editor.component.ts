@@ -61,7 +61,7 @@ export class PdsPersonEditorComponent {
   }
 
   onSubmit(): void {
-    if (this.form.valid && this.person) {
+    if (this.form.valid) {
       // Emit the updated person object to the parent container
       if(this.person) {
         const updatedPerson: PersonViewModel = {
@@ -71,7 +71,11 @@ export class PdsPersonEditorComponent {
         this.submitEvent.emit(updatedPerson);
       }
       else {
-        this.submitEvent.emit(this.newPerson);
+        const addedPerson: PersonViewModel = {
+          ...this.newPerson,
+          ...this.form.value,
+        };
+        this.submitEvent.emit(addedPerson);
       }
 
     }
