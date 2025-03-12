@@ -1,16 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   OnInit,
-  signal,
 } from '@angular/core';
-import { PersonService } from '../../services/person.service';
 import { PersonViewModel } from '../../models/person-view-model';
 import { PersonListComponent } from '../person-list/person-list.component';
-import { DepartmentService } from '../../services/department.service';
-import { DepartmentViewModel } from '../../models/department-view-model';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PdsPersonEditorComponent } from 'src/app/shared/ui/components/pds-person-editor/pds-person-editor.component';

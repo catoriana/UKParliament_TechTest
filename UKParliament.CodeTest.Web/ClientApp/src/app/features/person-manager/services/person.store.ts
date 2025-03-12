@@ -78,7 +78,7 @@ interface PersonState {
           switchMap((person) => personService.addPerson(person).pipe(
             tap({
               next: (newPerson) =>{
-                //newPerson.department = departmentStore.getDepartment(person.departmentId);
+                newPerson.department = departmentStore.getDepartment(person.departmentId);
                 patchState(state, { 
                 
                   people: [...state.people(), newPerson],
@@ -104,7 +104,7 @@ interface PersonState {
           switchMap((person) => personService.updatePerson(person).pipe(
             tap({
               next: () => {
-                //person.department = departmentStore.selectDepartment(person.departmentId);
+                person.department = departmentStore.getDepartment(person.departmentId);
                 const updatedPersons = state.people().map(p => 
                   p.id === person.id ? person : p
                 );
@@ -166,6 +166,7 @@ interface PersonState {
         patchState(state, { selectedPerson: person });
       },
       
+
       // Clear selected person
       clearSelectedPerson(): void {
         patchState(state, { selectedPerson: null });

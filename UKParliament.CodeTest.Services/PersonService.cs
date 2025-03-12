@@ -42,7 +42,7 @@ public class PersonService : IPersonService
         await _unitOfWork.SaveChangesAsync();
 
         // Convert back to ViewModel with the generated Id
-        return _mapper.Map<PersonViewModel>(model); ;
+        return _mapper.Map<PersonViewModel>(person); ;
     }
 
     /// <inheritdoc/>

@@ -1,222 +1,112 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-// import { CommonModule } from '@angular/common';
-// import { By } from '@angular/platform-browser';
-// import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PersonManagerContainerComponent } from './person-manager-container.component';
+import { PersonStore } from '../../services/person.store';
+import { DepartmentStore } from '../../services/department.store';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { PersonViewModel } from '../../models/person-view-model';
+import { DepartmentViewModel } from '../../models/department-view-model';
+import { signal } from '@angular/core';  // Import signal from Angular
 
-// import { PersonManagerContainerComponent } from './person-manager-container.component';
-// import { PersonStore } from '../../services/person.store';
-// import { DepartmentStore } from '../../services/department.store';
-// import { PersonViewModel } from '../../models/person-view-model';
-// import { DepartmentViewModel } from '../../models/department-view-model';
+describe('PersonManagerContainerComponent with Signals Store', () => {
+  let component: PersonManagerContainerComponent;
+  let fixture: ComponentFixture<PersonManagerContainerComponent>;
+  let personStore: any;
+  let departmentStore: jasmine.SpyObj<DepartmentStore>;
+  let router: jasmine.SpyObj<Router>;
+  let route: ActivatedRoute;
 
-// // Mock components
-// @Component({
-//   selector: 'app-person-list',
-//   template: '<div></div>'
-// })
-// class MockPersonListComponent {
-//   @Input() people: PersonViewModel[] | null = [];
-//   @Input() selectedPerson: PersonViewModel | null = null;
-//   @Output() personSelected = new EventEmitter<PersonViewModel>();
-//   @Output() personDeleted = new EventEmitter<number>();
-//   @Output() addPerson = new EventEmitter<void>();
-// }
+  beforeEach(() => {
+    // Mock the signal store
+    personStore = jasmine.createSpyObj('PersonStore', ['loadPersons', 'selectPerson', 'createPerson', 'updatePerson', 'deletePerson']);
 
-// @Component({
-//   selector: 'app-pds-person-editor',
-//   template: '<div></div>'
-// })
-// class MockPdsPersonEditorComponent {
-//   @Input() componentTitle!: string;
-//   @Input() buttonReset!: string;
-//   @Input() departments: DepartmentViewModel[] | null = [];
-//   @Input() person: PersonViewModel | null = null;
-//   @Output() submitEvent = new EventEmitter<PersonViewModel>();
-//   @Output() cancelEvent = new EventEmitter<void>();
-// }
+    // Mock signals for reactive state
+    personStore.loading = signal<boolean>(false);  // Mocked loading signal
+    personStore.people = signal<PersonViewModel[]>([]);  // Mocked people signal
+    personStore.selectedPerson = signal<PersonViewModel | null>(null);  // Mocked selectedPerson signal
 
-// describe('PersonManagerContainerComponent', () => {
-//   let component: PersonManagerContainerComponent;
-//   let fixture: ComponentFixture<PersonManagerContainerComponent>;
-//   let mockPersonStore: jasmine.SpyObj<PersonStore>;
-//   let mockDepartmentStore: jasmine.SpyObj<DepartmentStore>;
-//   let mockRouter: jasmine.SpyObj<Router>;
-//   let mockActivatedRoute: any;
+    const departmentStoreSpy = jasmine.createSpyObj('DepartmentStore', ['loadDepartments']);
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-//   const mockPeople = [
-//     { id: 1, firstName: 'John', lastName: 'Doe', dateOfBirth: '1990-01-01', departmentId: 1 },
-//     { id: 2, firstName: 'Jane', lastName: 'Smith', dateOfBirth: '1985-05-05', departmentId: 2 }
-//   ] as PersonViewModel[];
+    // Mock department signal
+    departmentStoreSpy.departments = signal<DepartmentViewModel[]>([]);  // Mocked departments signal
 
-//   const mockDepartments = [
-//     { id: 1, name: 'HR' },
-//     { id: 2, name: 'Engineering' }
-//   ] as DepartmentViewModel[];
+    TestBed.configureTestingModule({
+      imports: [PersonManagerContainerComponent, RouterTestingModule],
+      providers: [
+        { provide: PersonStore, useValue: personStore },
+        { provide: DepartmentStore, useValue: departmentStoreSpy },
+        { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: {} }
+      ]
+    });
 
-//   const mockPerson = mockPeople[0];
+    fixture = TestBed.createComponent(PersonManagerContainerComponent);
+    component = fixture.componentInstance;
+    personStore = TestBed.inject(PersonStore);
+    departmentStore = TestBed.inject(DepartmentStore) as jasmine.SpyObj<DepartmentStore>;
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    route = TestBed.inject(ActivatedRoute);
 
-//   beforeEach(async () => {
-//     // Create spies for the stores
-//     const peopleSignal = signal<PersonViewModel[]>(mockPeople);
-//     const loadingSignal = signal<boolean>(false);
-//     const selectedPersonSignal = signal<PersonViewModel | null>(null);
-//     const departmentsSignal = signal<DepartmentViewModel[]>(mockDepartments);
+    fixture.detectChanges();
+  });
 
-//     mockPersonStore = jasmine.createSpyObj('PersonStore', [
-//       'loadPeople',
-//       'selectPerson',
-//       'addPerson',
-//       'updatePerson',
-//       'deletePerson'
-//     ], {
-//       people: peopleSignal,
-//       isLoading: loadingSignal,
-//       selectedPerson: selectedPersonSignal
-//     });
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
-//     mockDepartmentStore = jasmine.createSpyObj('DepartmentStore', [
-//       'loadDepartments'
-//     ], {
-//       departments: departmentsSignal
-//     });
+  it('should call loadPersons and loadDepartments on initialization', () => {
+    personStore.loadPersons.and.callFake(() => {
+      personStore.people.set([{ id: 1, firstName: 'John', lastName: 'Doe', dateOfBirth: '1990-01-01', departmentId: 1 }]);
+    });
+    departmentStore.loadDepartments.and.returnValue();
 
-//     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
-//     mockActivatedRoute = {};
+    component.ngOnInit();
 
-//     await TestBed.configureTestingModule({
-//       imports: [
-//         CommonModule,
-//         RouterModule,
-//         PersonManagerContainerComponent
-//       ],
-//       declarations: [
-//         MockPersonListComponent,
-//         MockPdsPersonEditorComponent
-//       ],
-//       providers: [
-//         { provide: PersonStore, useValue: mockPersonStore },
-//         { provide: DepartmentStore, useValue: mockDepartmentStore },
-//         { provide: Router, useValue: mockRouter },
-//         { provide: ActivatedRoute, useValue: mockActivatedRoute }
-//       ]
-//     })
-//     .overrideComponent(PersonManagerContainerComponent, {
-//       set: {
-//         imports: [
-//           CommonModule,
-//           RouterModule,
-//           MockPersonListComponent,
-//           MockPdsPersonEditorComponent
-//         ],
-//         changeDetection: ChangeDetectionStrategy.Default
-//       }
-//     })
-//     .compileComponents();
+    expect(personStore.loadPersons).toHaveBeenCalled();
+    expect(departmentStore.loadDepartments).toHaveBeenCalled();
+    expect(personStore.people()).toEqual([{ id: 1, firstName: 'John', lastName: 'Doe', dateOfBirth: '1990-01-01', departmentId: 1 }]);
+  });
 
-//     fixture = TestBed.createComponent(PersonManagerContainerComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  it('should call createPerson when onPersonAdded is triggered', () => {
+    
+    const person: PersonViewModel = { id: 1, firstName: 'John', lastName: 'Doe', dateOfBirth: '1990-01-01', departmentId: 1 };
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
+    component.onPersonAdded(person);
 
-//   describe('ngOnInit', () => {
-//     it('should load people and departments on initialization', () => {
-//       // The loadPeople and loadDepartments should have been called in beforeEach during fixture.detectChanges()
-//       expect(mockPersonStore.loadPeople).toHaveBeenCalled();
-//       expect(mockDepartmentStore.loadDepartments).toHaveBeenCalled();
-//     });
-//   });
+    expect(personStore.selectedPerson()).toBeNull();
+  });
 
-//   describe('onPersonSelected', () => {
-//     it('should call personStore.selectPerson with correct id', () => {
-//       // Arrange
-//       const person = { ...mockPerson };
+  it('should call navigate to delete route when onPersonDeleted is triggered', () => {
+    const personId = 1;
 
-//       // Act
-//       component.onPersonSelected(person);
+    component.onPersonDeleted(personId);
 
-//       // Assert
-//       expect(mockPersonStore.selectPerson).toHaveBeenCalledWith(person.id);
-//     });
-//   });
+    expect(router.navigate).toHaveBeenCalledWith(['delete', personId], { relativeTo: route });
+  });
 
-//   describe('onPersonAdded', () => {
-//     it('should call personStore.addPerson with the provided person', () => {
-//       // Arrange
-//       const person = { ...mockPerson, id: 0 };
+  it('should reset state when onCancel is called', () => {
+    component.onCancel();
 
-//       // Act
-//       component.onPersonAdded(person);
+    expect(personStore.selectedPerson()).toBeNull();
+  });
 
-//       // Assert
-//       expect(mockPersonStore.addPerson).toHaveBeenCalledWith(person);
-//     });
-//   });
+  it('should reset state when onAdd is called', () => {
+    component.onAdd();
 
-//   describe('onPersonUpdated', () => {
-//     it('should call personStore.updatePerson with the provided person', () => {
-//       // Arrange
-//       const person = { ...mockPerson };
+    expect(personStore.selectedPerson()).toBeNull();
+  });
 
-//       // Act
-//       component.onPersonUpdated(person);
+  it('should properly bind isLoading property', () => {
+    expect(component.isLoading()).toBe(false);  // Access the signal value using '()'
 
-//       // Assert
-//       expect(mockPersonStore.updatePerson).toHaveBeenCalledWith(person);
-//     });
-//   });
+    // Update the loading signal
+    personStore.loading.set(true);
+    fixture.detectChanges();
 
-//   describe('onPersonDeleted', () => {
-//     it('should navigate to delete route with correct personId', () => {
-//       // Arrange
-//       const personId = 1;
+    expect(component.isLoading()).toBe(true);
+  });
 
-//       // Act
-//       component.onPersonDeleted(personId);
 
-//       // Assert
-//       expect(mockPersonStore.selectPerson).toHaveBeenCalledWith(personId);
-//       expect(mockRouter.navigate).toHaveBeenCalledWith(['delete', personId], { relativeTo: mockActivatedRoute });
-//     });
-//   });
-
-//   describe('onCancel', () => {
-//     it('should call resetState', () => {
-//       // Arrange
-//       spyOn(component as any, 'resetState');
-
-//       // Act
-//       component.onCancel();
-
-//       // Assert
-//       expect((component as any).resetState).toHaveBeenCalled();
-//     });
-//   });
-
-//   describe('onAdd', () => {
-//     it('should call resetState', () => {
-//       // Arrange
-//       spyOn(component as any, 'resetState');
-
-//       // Act
-//       component.onAdd();
-
-//       // Assert
-//       expect((component as any).resetState).toHaveBeenCalled();
-//     });
-//   });
-
-//   describe('resetState', () => {
-//     it('should call personStore.selectPerson with null', () => {
-//       // Act
-//       (component as any).resetState();
-
-//       // Assert
-//       expect(mockPersonStore.selectPerson).toHaveBeenCalledWith(null);
-//     });
-//   });
-// });
+});

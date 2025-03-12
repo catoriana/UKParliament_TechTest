@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { PersonViewModel } from '../../models/person-view-model';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-person-list',
   standalone: true,
-  imports: [CommonModule, NgxPaginationModule, NgxPaginationModule, RouterModule ],
+  imports: [CommonModule, NgxPaginationModule ],
   templateUrl: './person-list.component.html',
   styleUrl: './person-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
