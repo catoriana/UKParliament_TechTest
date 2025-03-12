@@ -1,8 +1,6 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using UKParliament.CodeTest.Data;
-using UKParliament.CodeTest.Data.Models;
 using UKParliament.CodeTest.ViewModels;
 
 namespace UKParliament.CodeTest.Services;
