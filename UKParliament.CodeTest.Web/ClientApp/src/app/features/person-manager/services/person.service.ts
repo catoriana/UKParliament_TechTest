@@ -17,7 +17,7 @@ export class PersonService {
     return this.http.delete<void>(this.baseUrl + `api/person/${id}`);
   }
 
-  addPerson(person: Omit<PersonViewModel, 'id'>): Observable<PersonViewModel> {
+  addPerson(person: PersonViewModel): Observable<PersonViewModel> {
     return this.http.post<PersonViewModel>(this.baseUrl + `api/person/`,  person );
   }
 

@@ -21,5 +21,5 @@ public class PersonViewModel
 
     public int DepartmentId { get; set; }
 
-    public DepartmentViewModel Department { get; set; }
+    public DepartmentViewModel? Department { get; set; }
 }

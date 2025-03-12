@@ -73,7 +73,7 @@ interface PersonState {
       ),
     
       // Create a new person
-      createPerson: rxMethod<Omit<PersonViewModel, 'id'>>(
+      createPerson: rxMethod<PersonViewModel>(
         pipe(
           tap(() => patchState(state, { loading: true })),
           switchMap((person) => personService.addPerson(person).pipe(
