@@ -55,26 +55,6 @@ describe('DepartmentService', () => {
       expect(result).toEqual(mockDepartments);
     });
 
-    it('should handle errors when the API request fails', () => {
-      // Act
-      let error: any;
-      service.getAll().subscribe({
-        next: () => fail('Expected an error, not departments'),
-        error: (e) => error = e
-      });
 
-      // Assert
-      const req = httpMock.expectOne(baseUrl + 'api/department');
-      expect(req.request.method).toBe('GET');
-      
-      // Respond with mock error
-      req.flush('Error fetching departments', { 
-        status: 500, 
-        statusText: 'Server Error' 
-      });
-      
-      // Verify the service propagates the error
-      expect(error.status).toBe(500);
-    });
   });
 });

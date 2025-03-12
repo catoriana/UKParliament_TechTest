@@ -103,7 +103,7 @@ describe('PersonService', () => {
       
       expect(httpClientSpy.post).toHaveBeenCalledWith(
         baseUrl + 'api/person/',
-        { testPerson }
+        testPerson 
       );
     });
 
@@ -126,7 +126,7 @@ describe('PersonService', () => {
       
       expect(httpClientSpy.post).toHaveBeenCalledWith(
         baseUrl + 'api/person/',
-        { model: { body: testPerson } }
+        testPerson
       );
     });
   });
@@ -143,7 +143,7 @@ describe('PersonService', () => {
       
       expect(httpClientSpy.put).toHaveBeenCalledWith(
         baseUrl + 'api/person/',
-        { model: { body: testPerson } }
+        testPerson
       );
     });
 
@@ -165,7 +165,7 @@ describe('PersonService', () => {
       
       expect(httpClientSpy.put).toHaveBeenCalledWith(
         baseUrl + 'api/person/',
-        {  testPerson  }
+          testPerson
       );
     });
   });

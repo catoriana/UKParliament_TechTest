@@ -17,8 +17,8 @@ import { FormErrorUtil } from 'src/app/core/utils/form-error-util';
 })
 export class PdsPersonEditorComponent {
   private readonly fb = inject(FormBuilder);
-  componentTitle = input.required<string>();
-  buttonReset = input.required<string>();
+  componentTitle = input<string>('');
+  buttonReset = input<string>('');
   @Input() departments:  DepartmentViewModel[] | null = [];
   @Input() person: PersonViewModel | null = null;
   @Output() submitEvent = new EventEmitter<PersonViewModel>();

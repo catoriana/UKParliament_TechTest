@@ -54,7 +54,7 @@ public class PersonServiceTests
             DepartmentId = 5
         };
 
-        var expectedViewModel = new PersonViewModel
+        var personEntityAdded = new Person
         {
             Id = 1,
             FirstName = "John",
@@ -63,7 +63,7 @@ public class PersonServiceTests
             DepartmentId = 5
         };
 
-        var expectedEntity = new Person
+        var personViewModelAdded = new PersonViewModel
         {
             Id = 1,
             FirstName = "John",
@@ -72,10 +72,11 @@ public class PersonServiceTests
             DepartmentId = 5
         };
 
-        _mockMapper.Setup(m => m.Map<Person>(personViewModel)).Returns(personEntity);
-        _mockMapper.Setup(m => m.Map<PersonViewModel>(personViewModel)).Returns(expectedViewModel);
+        _mockMapper.Setup(m => m.Map<Person>(It.IsAny<PersonViewModel>())).Returns(personEntity);
+        _mockMapper.Setup(m => m.Map<PersonViewModel>(It.IsAny<Person>())).Returns(personViewModelAdded);
 
-        _mockPersonRepository.Setup(r => r.AddAsync(personEntity)).ReturnsAsync(expectedEntity);
+
+        _mockPersonRepository.Setup(r => r.AddAsync(personEntity)).ReturnsAsync(personEntityAdded);
         _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync()).Returns(Task.CompletedTask);
 
         // Act
@@ -83,11 +84,11 @@ public class PersonServiceTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(expectedViewModel.Id, result.Id);
-        Assert.Equal(expectedViewModel.FirstName, result.FirstName);
-        Assert.Equal(expectedViewModel.LastName, result.LastName);
-        Assert.Equal(expectedViewModel.DateOfBirth, result.DateOfBirth);
-        Assert.Equal(expectedViewModel.DepartmentId, result.DepartmentId);
+        Assert.Equal(personEntityAdded.Id, result.Id);
+        Assert.Equal(personEntityAdded.FirstName, result.FirstName);
+        Assert.Equal(personEntityAdded.LastName, result.LastName);
+        Assert.Equal(personEntityAdded.DateOfBirth, result.DateOfBirth);
+        Assert.Equal(personEntityAdded.DepartmentId, result.DepartmentId);
 
         _mockPersonRepository.Verify(r => r.AddAsync(personEntity), Times.Once);
         _mockUnitOfWork.Verify(uow => uow.SaveChangesAsync(), Times.Once);

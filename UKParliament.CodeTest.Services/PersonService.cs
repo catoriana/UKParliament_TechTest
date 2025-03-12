@@ -38,11 +38,11 @@ public class PersonService : IPersonService
         // Convert ViewModel to Entity using automapper
         var person = _mapper.Map<Person>(model);
 
-        await _unitOfWork.PersonRepository.AddAsync(person);
+        var updatedPerson = await _unitOfWork.PersonRepository.AddAsync(person);
         await _unitOfWork.SaveChangesAsync();
 
         // Convert back to ViewModel with the generated Id
-        return _mapper.Map<PersonViewModel>(person); ;
+        return _mapper.Map<PersonViewModel>(updatedPerson); ;
     }
 
     /// <inheritdoc/>
