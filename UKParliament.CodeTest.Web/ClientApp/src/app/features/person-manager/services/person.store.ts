@@ -80,6 +80,7 @@ interface PersonState {
             tap({
               next: (newPerson) => patchState(state, { 
                 people: [...state.people(), newPerson],
+                selectedPerson: null,
                 error: null, 
                 loading: false 
               }),

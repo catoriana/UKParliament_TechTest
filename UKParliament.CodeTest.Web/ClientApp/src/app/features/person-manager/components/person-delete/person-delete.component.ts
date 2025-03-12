@@ -24,7 +24,6 @@ export class PersonDeleteComponent implements OnInit {
         if (this.person() == null) {
           //this.personStore.loadPeople();
           this.personStore.selectPerson(Number(idParam));
-          this.onCancel();
         }
       }
     });
@@ -37,6 +36,7 @@ export class PersonDeleteComponent implements OnInit {
   onDelete(personId: number | undefined): void {
     if (personId) {
       this.personStore.deletePerson(personId);
+      this.onCancel();
     }
   }
 }
