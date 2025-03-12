@@ -76,6 +76,7 @@ export class PdsPersonEditorComponent {
           ...this.form.value,
         };
         this.submitEvent.emit(addedPerson);
+        this.form.reset();
       }
 
     }
