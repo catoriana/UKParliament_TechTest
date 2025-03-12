@@ -5,7 +5,7 @@ import { ageAndDateValidator } from '../../../../core/validators/age-and-date.va
 import { DepartmentViewModel } from 'src/app/features/person-manager/models/department-view-model';
 import { PersonViewModel } from 'src/app/features/person-manager/models/person-view-model';
 import { REGEX } from 'src/app/core/constants/regex.constants';
-import { FormErrorUtil } from 'src/app/core/utils/form-error.util';
+import { FormErrorUtil } from 'src/app/core/utils/form-error-util';
 
 @Component({
   selector: 'app-pds-person-editor',
@@ -76,9 +76,8 @@ export class PdsPersonEditorComponent {
           ...this.form.value,
         };
         this.submitEvent.emit(addedPerson);
-        this.form.reset();
       }
-
+      this.form.reset();
     }
   }
 

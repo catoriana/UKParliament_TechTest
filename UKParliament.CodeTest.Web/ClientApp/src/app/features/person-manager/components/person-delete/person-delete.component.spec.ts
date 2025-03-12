@@ -1,85 +1,77 @@
-// import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-// import { ActivatedRoute, Router, RouterModule, convertToParamMap } from '@angular/router';
-// import { CommonModule } from '@angular/common';
-// import { BehaviorSubject, of } from 'rxjs';
-// import { PersonDeleteComponent } from './person-delete.component';
-// import { PersonStore } from '../../services/person.store';
-// import { signal, Signal } from '@angular/core';
-// import { PersonViewModel } from '../../models/person-view-model';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PersonDeleteComponent } from './person-delete.component';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { PersonStore } from '../../services/person.store';
+import { of } from 'rxjs';
+import { CommonModule, DatePipe } from '@angular/common';
 
+describe('PersonDeleteComponent', () => {
+  let component: PersonDeleteComponent;
+  let fixture: ComponentFixture<PersonDeleteComponent>;
+  let personStoreMock: jasmine.SpyObj<PersonStore>;
+  let activatedRouteMock: jasmine.SpyObj<ActivatedRoute>;
+  let routerMock: jasmine.SpyObj<Router>;
 
-// describe('PersonDeleteComponent', () => {
-//   let component: PersonDeleteComponent;
-//   let fixture: ComponentFixture<PersonDeleteComponent>;
-//   let mockPersonStore: jasmine.SpyObj<PersonStore>;
-//   let mockRouter: jasmine.SpyObj<Router>;
-//   let mockActivatedRoute: any;
-//   let personSubject: Signal<PersonViewModel | null>;
+  beforeEach(async () => {
+    // Create mock instances of the services
+    personStoreMock = jasmine.createSpyObj('PersonStore', ['selectPerson', 'deletePerson']);
+    activatedRouteMock = jasmine.createSpyObj('ActivatedRoute', ['paramMap']);
+    routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
-//   beforeEach(async () => {
-//     // Create mock for PersonStore
-//     personSubject = signal<PersonViewModel | null>(null);
-//     mockPersonStore = jasmine.createSpyObj('PersonStore', [
-//       'loadPeople',
-//       'selectPerson',
-//       'deletePerson'
-//     ]);
-    
-//     // Setup selectedPerson as a signal returning the BehaviorSubject's value
-   
-//     // Create mock for Router
-//     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    // Mock the route paramMap observable
+    activatedRouteMock.params = of({ get: () => '123' }); // Mocking an ID of '123'
 
-//     // Create mock for ActivatedRoute
-//     mockActivatedRoute = {
-//       paramMap: of(convertToParamMap({ id: '123' }))
-//     };
+    await TestBed.configureTestingModule({
+      declarations: [PersonDeleteComponent],
+      imports: [CommonModule, RouterModule],
+      providers: [
+        { provide: PersonStore, useValue: personStoreMock },
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
+        { provide: Router, useValue: routerMock },
+        DatePipe,
+      ],
+    }).compileComponents();
+  });
 
-//     await TestBed.configureTestingModule({
-//       imports: [CommonModule, RouterModule, PersonDeleteComponent],
-//       providers: [
-//         { provide: PersonStore, useValue: mockPersonStore },
-//         { provide: Router, useValue: mockRouter },
-//         { provide: ActivatedRoute, useValue: mockActivatedRoute }
-//       ]
-//     }).compileComponents();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PersonDeleteComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//     fixture = TestBed.createComponent(PersonDeleteComponent);
-//     component = fixture.componentInstance;
-//   });
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
-//   it('should create', () => {
-//     fixture.detectChanges();
-//     expect(component).toBeTruthy();
-//   });
+  it('should call selectPerson if person is not selected when ID param is provided', () => {
+    // Mock the initial person state (no person selected)
+    personStoreMock.selectedPerson = jasmine.createSpy().and.returnValue(null);
 
+    // Trigger ngOnInit
+    component.ngOnInit();
 
-//   describe('onCancel', () => {
-//     it('should navigate to person-manager route', () => {
-//       // Call onCancel
-//       component.onCancel();
-      
-//       // Verify navigation
-//       expect(mockRouter.navigate).toHaveBeenCalledWith(['/person-manager']);
-//     });
-//   });
+    expect(personStoreMock.selectPerson).toHaveBeenCalledWith(123);
+  });
 
-//   describe('onDelete', () => {
-//     it('should call deletePerson with the provided id', () => {
-//       // Call onDelete with test ID
-//       const testId = 123;
-//       component.onDelete(testId);
-      
-//       // Verify deletePerson was called
-//       expect(mockPersonStore.deletePerson).toHaveBeenCalledWith(testId);
-//     });
+  it('should not call selectPerson if person is already selected when ID param is provided', () => {
+    // Mock the initial person state (person is already selected)
+    personStoreMock.selectedPerson = jasmine.createSpy().and.returnValue({ id: 123 });
 
-//     it('should not call deletePerson when id is undefined', () => {
-//       // Call onDelete with undefined
-//       component.onDelete(undefined);
-      
-//       // Verify deletePerson was not called
-//       expect(mockPersonStore.deletePerson).not.toHaveBeenCalled();
-//     });
-//   });
-// });
+    // Trigger ngOnInit
+    component.ngOnInit();
+
+    expect(personStoreMock.selectPerson).not.toHaveBeenCalled();
+  });
+
+  it('should navigate to "/person-manager" when onCancel is called', () => {
+    component.onCancel();
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/person-manager']);
+  });
+
+  it('should call deletePerson and navigate to "/person-manager" when onDelete is called', () => {
+    component.onDelete(123);
+
+    expect(personStoreMock.deletePerson).toHaveBeenCalledWith(123);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/person-manager']);
+  });
+});

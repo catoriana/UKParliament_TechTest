@@ -5,7 +5,7 @@ import { PdsPersonEditorComponent } from './pds-person-editor.component';
 import { ChangeDetectionStrategy, SimpleChange } from '@angular/core';
 import { DepartmentViewModel } from 'src/app/features/person-manager/models/department-view-model';
 import { PersonViewModel } from 'src/app/features/person-manager/models/person-view-model';
-import { FormErrorUtil } from 'src/app/core/utils/form-error.util';
+import { FormErrorUtil } from 'src/app/core/utils/form-error-util';
 
 describe('PdsPersonEditorComponent', () => {
   let component: PdsPersonEditorComponent;

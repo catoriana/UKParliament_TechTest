@@ -25,7 +25,7 @@ export function ageAndDateValidator(minAge: number, maxAge: number): ValidatorFn
     const calculatedAge = isBeforeBirthday ? age - 1 : age;
 
     if (calculatedAge < minAge || calculatedAge > maxAge) {
-      return { ageRange: true };
+      return { invalidAgeRange: true };
     }
 
     return null;

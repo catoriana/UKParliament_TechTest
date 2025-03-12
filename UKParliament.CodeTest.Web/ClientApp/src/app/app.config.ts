@@ -15,7 +15,7 @@ export function getBaseUrl() {
 export const appConfig: ApplicationConfig = {
   providers: [
     
-    provideExperimentalZonelessChangeDetection(),
+   // provideExperimentalZonelessChangeDetection(),
     { provide: ErrorHandler, useClass: ErrorHandlerService },
     provideRouter(
       APP_ROUTES,

@@ -22,7 +22,6 @@ export class PersonDeleteComponent implements OnInit {
       const idParam = params.get('id');
       if (idParam) {
         if (this.person() == null) {
-          // this.personStore.loadPersons();
           this.personStore.selectPerson(Number(idParam));
         }
       }

@@ -4,7 +4,6 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, catchError, pipe, switchMap, tap } from 'rxjs';
 import { PersonViewModel } from '../models/person-view-model';
 import { PersonService } from './person.service';
-import { DepartmentService } from './department.service';
 import { DepartmentStore } from './department.store';
 
 
@@ -79,7 +78,7 @@ interface PersonState {
           switchMap((person) => personService.addPerson(person).pipe(
             tap({
               next: (newPerson) =>{
-                newPerson.department = departmentStore.getDepartment(person.departmentId);
+                //newPerson.department = departmentStore.getDepartment(person.departmentId);
                 patchState(state, { 
                 
                   people: [...state.people(), newPerson],
@@ -105,7 +104,7 @@ interface PersonState {
           switchMap((person) => personService.updatePerson(person).pipe(
             tap({
               next: () => {
-                person.department = departmentStore.getDepartment(person.departmentId);
+                //person.department = departmentStore.selectDepartment(person.departmentId);
                 const updatedPersons = state.people().map(p => 
                   p.id === person.id ? person : p
                 );
