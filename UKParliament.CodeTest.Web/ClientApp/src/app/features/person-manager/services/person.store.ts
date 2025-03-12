@@ -78,12 +78,16 @@ interface PersonState {
           tap(() => patchState(state, { loading: true })),
           switchMap((person) => personService.addPerson(person).pipe(
             tap({
-              next: (newPerson) => patchState(state, { 
-                people: [...state.people(), newPerson],
-                selectedPerson: null,
-                error: null, 
-                loading: false 
-              }),
+              next: (newPerson) =>{
+                newPerson.department = departmentStore.getDepartment(person.departmentId);
+                patchState(state, { 
+                
+                  people: [...state.people(), newPerson],
+                  selectedPerson: null,
+                  error: null, 
+                  loading: false 
+                })
+              } ,
               error: (error) => patchState(state, { 
                 error: `Failed to create person: ${error.message}`, 
                 loading: false 
